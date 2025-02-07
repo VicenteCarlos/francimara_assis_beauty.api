@@ -1,7 +1,7 @@
 import { IGenericProps, IRepository } from 'src/common/interfaces/irepository';
 import { PrismaService } from 'src/prisma/prisma.service';
 
-export abstract class Repository<T, K> implements IRepository<T, K> {
+export abstract class Repository<T> implements IRepository<T> {
   constructor(protected readonly prisma: PrismaService) {}
 
   public async getAll({
@@ -10,7 +10,7 @@ export abstract class Repository<T, K> implements IRepository<T, K> {
     include,
     select,
     where,
-  }: IGenericProps<T, K>): Promise<T[]> {
+  }: IGenericProps<T>): Promise<T[]> {
     if (include) {
       return await this.prisma[table].findMany({
         orderBy: orderBy ? orderBy : [],
@@ -29,16 +29,15 @@ export abstract class Repository<T, K> implements IRepository<T, K> {
   public async findUnique({
     table,
     where,
-  }: IGenericProps<T, K>): Promise<T | null> {
-    console.log(where);
+  }: IGenericProps<T>): Promise<T | null> {
     return await this.prisma[table].findUnique({
       where,
     });
   }
 
-  public async getById({ table, id, include }: IGenericProps<T, K>) {
+  public async getById({ table, id, include }: IGenericProps<T>) {
     if (table === 'account') {
-      return await this.prisma.account.findUnique({
+      return await this.prisma[table].findUnique({
         where: {
           b_account_id: id,
         },
@@ -47,8 +46,7 @@ export abstract class Repository<T, K> implements IRepository<T, K> {
     }
     return await this.prisma[table].findUnique({
       where: {
-        [`${table[table.length - 1].toLowerCase() === 's'.toLowerCase() ? table.slice(0, table.length - 1) : table}_id`]:
-          id,
+        id,
       },
       include: include ? include : [],
     });
@@ -57,11 +55,9 @@ export abstract class Repository<T, K> implements IRepository<T, K> {
   public async create({
     table,
     data,
-    select,
-  }: IGenericProps<T, K>): Promise<T> {
+  }: IGenericProps<T>): Promise<T> {
     return await this.prisma[table].create({
       data,
-      select: select ? select : [],
     });
   }
 
@@ -69,13 +65,10 @@ export abstract class Repository<T, K> implements IRepository<T, K> {
     table,
     data,
     select,
-  }: IGenericProps<T, K>): Promise<T> {
+  }: IGenericProps<T>): Promise<T> {
     return await this.prisma[table].update({
       where: {
-        [`${table[table.length - 1].toLowerCase() === 's'.toLowerCase() ? table.slice(0, table.length - 1) : table}_id`]:
-          data[
-            `${table[table.length - 1].toLowerCase() === 's'.toLowerCase() ? table.slice(0, table.length - 1) : table}_id`
-          ],
+        id: data['id'],
       },
       data,
       select: select ? select : [],
@@ -86,19 +79,16 @@ export abstract class Repository<T, K> implements IRepository<T, K> {
     table,
     data,
     select,
-  }: IGenericProps<T, K>): Promise<T> {
+  }: IGenericProps<T>): Promise<T> {
     return await this.prisma[table].delete({
       where: {
-        [`${table[table.length - 1].toLowerCase() === 's'.toLowerCase() ? table.slice(0, table.length - 1) : table}_id`]:
-          data[
-            `${table[table.length - 1].toLowerCase() === 's'.toLowerCase() ? table.slice(0, table.length - 1) : table}_id`
-          ],
+        id: data['id'],
       },
       select: select ? select : [],
     });
   }
 
-  public async count({ table, where }: IGenericProps<T, K>): Promise<T | null> {
+  public async count({ table, where }: IGenericProps<T>): Promise<T | null> {
     return await this.prisma[table].count({
       where,
     });
