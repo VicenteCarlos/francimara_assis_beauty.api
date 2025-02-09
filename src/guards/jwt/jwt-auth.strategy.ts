@@ -30,8 +30,6 @@ export class JWTAuthStrategy extends PassportStrategy(Strategy) {
     if (userIsAuthenticated) {
       const user = await this.redisService.get(`user-${userId}`);
 
-      console.log("Entrou aqui: ", JSON.parse(user))
-
       return JSON.parse(user);
     }
 
