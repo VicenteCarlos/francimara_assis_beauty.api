@@ -22,7 +22,7 @@ export class AuthService {
   public async register({ full_name, email, password }: UserRegisterDTO) {
     await this.verifyByEmail({ email });
 
-    await this.prismaService.user.create({
+    await this.prismaService.users.create({
       data: { full_name, email, password },
     });
 
@@ -59,7 +59,7 @@ export class AuthService {
   }
 
   private async getByEmail({ email }: { email: string }) {
-    const findedEmail = await this.prismaService.user.findUnique({
+    const findedEmail = await this.prismaService.users.findUnique({
       where: { email },
     });
 
@@ -76,7 +76,7 @@ export class AuthService {
   }
 
   private async verifyByEmail({ email }: { email: string }): Promise<void> {
-    const findedEmail = await this.prismaService.user.findUnique({
+    const findedEmail = await this.prismaService.users.findUnique({
       where: { email },
     });
 

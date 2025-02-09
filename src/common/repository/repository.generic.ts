@@ -13,14 +13,14 @@ export abstract class Repository<T> implements IRepository<T> {
   }: IGenericProps<T>): Promise<T[]> {
     if (include) {
       return await this.prisma[table].findMany({
-        orderBy: orderBy ? orderBy : [],
+        orderBy: orderBy ?? {},
         include,
         where,
       });
     }
 
     return await this.prisma[table].findMany({
-      orderBy: orderBy ? orderBy : [],
+      orderBy: orderBy ?? {},
       select,
       where,
     });

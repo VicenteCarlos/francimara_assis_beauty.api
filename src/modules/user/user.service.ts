@@ -12,14 +12,14 @@ export class UserService {
   ) {}
 
   public async getAll() {
-    const allUsers = await this.userRepository.getAll({ table: 'user' });
+    const allUsers = await this.userRepository.getAll({ table: 'users' });
 
     return this.userTransform.collection(allUsers);
   }
 
   public async getById({ id }: { id: string }) {
     const user = await this.userRepository.findUnique({
-      table: 'user',
+      table: 'users',
       where: { id },
     });
 

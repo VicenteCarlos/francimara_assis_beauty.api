@@ -4,6 +4,7 @@ import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 import { AuthModule } from './auth/auth.module';
 import { UserModule } from './modules/user/user.module';
+import { MakesModule } from './modules/makes/makes.module';
 
 @Module({
   imports: [
@@ -19,7 +20,8 @@ import { UserModule } from './modules/user/user.module';
       global: true,
     }),
     AuthModule,
-    UserModule
+    UserModule,
+    MakesModule,
   ],
   controllers: [],
   providers: [],
