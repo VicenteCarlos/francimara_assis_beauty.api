@@ -33,7 +33,7 @@ model makes {
 }
 
 model schedule {
-  id Int @id @default(autoincrement())
+  id           Int      @id @default(autoincrement())
   user_id      String
   make_id      Int
   scheduled_in DateTime
