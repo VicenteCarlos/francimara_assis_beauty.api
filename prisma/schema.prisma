@@ -13,11 +13,23 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model user {
+model users {
   id         String   @id @default(uuid())
   full_name  String
   email      String   @unique
   password   String
+  makes      makes[]
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
+}
+
+model makes {
+  id           Int      @id @default(autoincrement())
+  name         String   @unique
+  price        Float
+  scheduled_in DateTime
+  user_id      String
+  users        users    @relation(fields: [user_id], references: [id])
+  created_at   DateTime @default(now())
+  updated_at   DateTime @updatedAt
 }
