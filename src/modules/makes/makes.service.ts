@@ -16,10 +16,8 @@ export class MakeService {
     const allMakeInCache = await this.redisService.get(`makes`);
 
     if (allMakeInCache) {
-      const makes = this.makeTransformer.collection(JSON.parse(allMakeInCache));
-
       return {
-        makes,
+        makes: JSON.parse(allMakeInCache),
       };
     }
 
@@ -30,10 +28,12 @@ export class MakeService {
       },
     });
 
-    await this.redisService.set('makes', JSON.stringify(allMakes), 3605);
+    const makeTransformed = this.makeTransformer.collection(allMakes);
+
+    await this.redisService.set('makes', JSON.stringify(makeTransformed), 3605);
 
     return {
-      makes: this.makeTransformer.collection(allMakes),
+      makes: makeTransformed,
     };
   }
 }
